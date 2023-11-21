@@ -18,12 +18,16 @@ import { Icon } from "@rneui/themed";
 import ModalNote from "./components/ModalNote";
 import Title from "./components/Title";
 import Search from "./components/Search";
+import NoteList from "./components/NoteList";
 
 export default function App() {
   const [notes, setNotes] = useState([]);
 
-  const [isModal, setIsmodal] = useState(true);
+  const [isModal, setIsmodal] = useState(false);
 
+  const onHandleNote = () => {
+    setIsmodal(true);
+  };
   function openModalInput() {
     setIsmodal(!isModal);
   }
@@ -55,43 +59,14 @@ export default function App() {
         <Title />
         <Search />
         <ActivityIndicator size="large" color={"#ff99cc00"} />
-        <ScrollView>
-          <View style={styles.noteList}>
-            {notes.map((note) => {
-              return (
-                <View style={styles.note}>
-                  <View style={styles.noteData}>
-                    <Text
-                      style={{
-                        ...styles.noteTitle,
-                        display: note.title == "" ? "none" : "flex",
-                        fontSize: 17,
-                      }}
-                    >
-                      {note.title}
-                    </Text>
-                    <Text
-                      style={{
-                        display: note.note == "" ? "none" : "flex",
-                        fontSize: 13,
-                        color: "white",
-                      }}
-                    >
-                      {note.note}
-                    </Text>
-                  </View>
-                  <Text style={styles.date}>{note.getTime()}</Text>
-                </View>
-              );
-            })}
-          </View>
-        </ScrollView>
+        <NoteList notes={notes} onHandleNote={onHandleNote} />
+
         <View style={styles.plusContainer}>
           <TouchableNativeFeedback
             onPress={() => {
               openModalInput();
             }}
-            // background={TouchableNativeFeedback.Ripple("grey", true, 30)}
+            background={TouchableNativeFeedback.Ripple("grey", true, 30)}
           >
             <View>
               <Icon
@@ -118,31 +93,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
 
-  noteList: {
-    width: "100%",
-    //  backgroundColor: "yellow",
-
-    marginTop: 10,
-  },
-  note: {
-    backgroundColor: "grey",
-    width: "95%",
-    alignSelf: "center",
-    padding: 15,
-    borderRadius: 14,
-    height: 90,
-    justifyContent: "center",
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  noteData: {
-    marginBottom: 5,
-  },
-  noteTitle: {
-    fontSize: 17,
-    display: "none",
-    color: "white",
-  },
   plusContainer: {
     position: "absolute",
     zIndex: 3,
@@ -156,8 +106,5 @@ const styles = StyleSheet.create({
     height: 50,
 
     borderRadius: 50,
-  },
-  date: {
-    fontSize: 12,
   },
 });
