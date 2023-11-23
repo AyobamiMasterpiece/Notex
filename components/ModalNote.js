@@ -12,48 +12,72 @@ import {
 import { Icon } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { getCurrentDate, getCurrentTime12Hour, Note } from "./dateFunctions";
-
-function ModalNote({ visible, handleNoteNodal, notes, handleSetnote }) {
-  console.log("mount");
+//////////////////////remember to use logic for modal time by passing a prop to know wheter modal was opened by a note click
+function ModalNote({
+  visible,
+  handleNoteNodal,
+  notes,
+  handleSetnote,
+  noteData,
+  ChangeNoteData,
+}) {
+  // console.log("mount");
   const [isdone, setIsDone] = useState(false);
-  const [noteData, setNoteData] = useState({
-    note: "",
-    title: "",
+  const [time, setTime] = useState(noteData.time);
+  // const [noteObj,setNoteObj]=useState(noteData);
+  // console.log(noteData.note, "play");
+
+  const [noteObj, setNoteObj] = useState({
+    // note: noteData.note,
+    // title: noteData.title,
+    note: "4",
+    title: "7",
   });
-  const [time, setTime] = useState("");
+  console.log(noteData);
+  console.log(noteObj, "k");
+  // console.log(noteData, "ppp");
+  // console.log(noteObj, "kkk");
+  // const [time, setTime] = useState("");
   useEffect(() => {
-    setTime(getCurrentTime12Hour());
+    // setTime(getCurrentTime12Hour());
+    // setTime(noteData.time);
+    ChangeNoteData(new Note());
+
+    setNoteObj({
+      note: noteData.note,
+
+      title: noteData.title,
+    });
+
+    console.log("now-new");
     return () => {
       console.log("unmount");
-      setNoteData({
-        note: "",
-        title: "",
-      });
 
       setIsDone(false);
     };
   }, [visible]);
 
-  // console.log(time);
+  // console.log(notes);
+
   function handleSaved() {
     setIsDone(true);
-    let note = new Note(noteData.note, time, noteData.title);
+    let note = new Note(noteObj.note, noteData.time, noteObj.title);
     handleSetnote((old) => {
       return [note, ...old];
     });
     handleNoteNodal();
-    console.log(notes);
+    // console.log(notes);
   }
   function handlenotechange(text) {
-    setNoteData({
-      ...noteData,
+    setNoteObj({
+      ...noteObj,
       note: text,
     });
     setIsDone(false);
   }
   function handletitlechange(text) {
-    setNoteData({
-      ...noteData,
+    setNoteObj({
+      ...noteObj,
       title: text,
     });
     setIsDone(false);
@@ -98,8 +122,7 @@ function ModalNote({ visible, handleNoteNodal, notes, handleSetnote }) {
                 onPress={handleSaved}
               >
                 {isdone == false &&
-                  (!noteData.note.length == 0 ||
-                    !noteData.title.length == 0) && (
+                  (!noteObj.note.length == 0 || !noteObj.title.length == 0) && (
                     <Icon
                       name="done"
                       type="ionicons"
@@ -111,7 +134,7 @@ function ModalNote({ visible, handleNoteNodal, notes, handleSetnote }) {
             </View>
           </View>
           <View style={styles.timeBox}>
-            <Text style={styles.time}>{time}</Text>
+            <Text style={styles.time}>{noteData.time}</Text>
           </View>
 
           <View style={styles.titleInput}>
@@ -121,13 +144,13 @@ function ModalNote({ visible, handleNoteNodal, notes, handleSetnote }) {
               placeholderTextColor={"white"}
               cursorColor="white"
               onChangeText={handletitlechange}
-              value={noteData.title}
+              value={noteObj.title}
             ></TextInput>
           </View>
           <View style={styles.note}>
             <ScrollView>
               <TextInput
-                value={noteData.note}
+                value={noteObj.note}
                 multiline={true}
                 autoFocus={true}
                 style={styles.notePad}

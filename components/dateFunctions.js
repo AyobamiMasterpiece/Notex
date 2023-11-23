@@ -50,15 +50,14 @@ export { getCurrentTime12Hour, getCurrentDate, Note };
 
 class Note {
   constructor(note, time, title) {
-    this.time = time;
-    this.title = title;
-    this.note = note;
-    this.realtime = getCurrentDate();
-    this.key = new Date();
+    this.time = time || getCurrentTime12Hour();
+    this.title = title || "";
+    this.note = note || "";
+
+    // this.key = new Date();
   }
 
   getTime() {
-    return `${this.time}, ${this.realtime}`;
+    return `${this.time}, ${getCurrentDate()}`;
   }
 }
-console.log(Note);

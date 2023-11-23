@@ -19,9 +19,10 @@ import ModalNote from "./components/ModalNote";
 import Title from "./components/Title";
 import Search from "./components/Search";
 import NoteList from "./components/NoteList";
-
+import { Note } from "./components/dateFunctions";
 export default function App() {
   const [notes, setNotes] = useState([]);
+  const [noteData, setNoteData] = useState(new Note());
 
   const [isModal, setIsmodal] = useState(false);
 
@@ -35,7 +36,9 @@ export default function App() {
   function handleSetnote(params) {
     setNotes(params);
   }
-
+  function ChangeNoteData(item) {
+    setNoteData(item);
+  }
   // Set dark-colored icon style
 
   return (
@@ -53,13 +56,20 @@ export default function App() {
           visible={isModal}
           handleNoteNodal={openModalInput}
           notes={notes}
+          noteData={noteData}
           handleSetnote={handleSetnote}
+          ChangeNoteData={ChangeNoteData}
+          key={isModal ? "modalVisible" : "modalHidden"}
         ></ModalNote>
 
         <Title />
         <Search />
         <ActivityIndicator size="large" color={"#ff99cc00"} />
-        <NoteList notes={notes} onHandleNote={onHandleNote} />
+        <NoteList
+          notes={notes}
+          onHandleNote={onHandleNote}
+          onChangeNoteData={ChangeNoteData}
+        />
 
         <View style={styles.plusContainer}>
           <TouchableNativeFeedback

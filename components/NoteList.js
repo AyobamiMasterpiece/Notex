@@ -1,12 +1,14 @@
 import { StyleSheet, ScrollView, View, Text, Pressable } from "react-native";
+import { v4 as uuid } from "uuid";
+import "react-native-get-random-values";
 
-function NoteList({ notes, onHandleNote }) {
+function NoteList({ notes, onHandleNote, onChangeNoteData }) {
   return (
     <ScrollView>
       <View style={styles.noteList}>
         {notes.map((note) => {
           return (
-            <View style={styles.note}>
+            <View style={styles.note} key={uuid()}>
               <Pressable
                 android_ripple={{ color: "white", borderless: true }}
                 style={{
@@ -16,7 +18,10 @@ function NoteList({ notes, onHandleNote }) {
                   justifyContent: "center",
                   // backgroundColor: "red",
                 }}
-                onPress={onHandleNote}
+                onPress={() => {
+                  onChangeNoteData(note);
+                  onHandleNote(note);
+                }}
               >
                 <View style={styles.noteData}>
                   <Text
