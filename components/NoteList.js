@@ -1,14 +1,26 @@
 import { StyleSheet, ScrollView, View, Text, Pressable } from "react-native";
-import { v4 as uuid } from "uuid";
-import "react-native-get-random-values";
+import React, { useState } from "react";
 
-function NoteList({ notes, onHandleNote, onChangeNoteData }) {
+function NoteList({
+  notes,
+  onHandleNote,
+  onChangeNoteData,
+  changeNoteMode,
+  changeItemId,
+  setRecent,
+}) {
+  // const [viewWidth, setViewWidth] = useState(0);
+
+  // const onLayout = (event) => {
+  //   const { width } = event.nativeEvent.layout;
+  //   setViewWidth(width);
+  // };
   return (
     <ScrollView>
       <View style={styles.noteList}>
         {notes.map((note) => {
           return (
-            <View style={styles.note} key={uuid()}>
+            <View style={styles.note} key={note.id}>
               <Pressable
                 android_ripple={{ color: "white", borderless: true }}
                 style={{
@@ -20,7 +32,10 @@ function NoteList({ notes, onHandleNote, onChangeNoteData }) {
                 }}
                 onPress={() => {
                   onChangeNoteData(note);
+                  changeNoteMode("edit");
+                  changeItemId(note.id);
                   onHandleNote(note);
+                  setRecent(note.id);
                 }}
               >
                 <View style={styles.noteData}>
@@ -29,7 +44,10 @@ function NoteList({ notes, onHandleNote, onChangeNoteData }) {
                       ...styles.noteTitle,
                       display: note.title == "" ? "none" : "flex",
                       fontSize: 17,
+                      // fontSize: viewWidth / 10,
                     }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                   >
                     {note.title}
                   </Text>
@@ -39,6 +57,8 @@ function NoteList({ notes, onHandleNote, onChangeNoteData }) {
                       fontSize: 13,
                       color: "white",
                     }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                   >
                     {note.note}
                   </Text>

@@ -1,5 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-
+import { formatDistance, subDays } from "date-fns";
+import { v4 as uuid } from "uuid";
+import "react-native-get-random-values";
 function getCurrentDate() {
   const currentDate = new Date();
   const months = [
@@ -49,15 +50,17 @@ function getCurrentTime12Hour() {
 export { getCurrentTime12Hour, getCurrentDate, Note };
 
 class Note {
-  constructor(note, time, title) {
+  constructor(note, time, id, title) {
     this.time = time || getCurrentTime12Hour();
     this.title = title || "";
     this.note = note || "";
+    this.id = id || uuid();
 
     // this.key = new Date();
   }
 
-  getTime() {
-    return `${this.time}, ${getCurrentDate()}`;
-  }
+  getTime() {}
+  format() {}
+  getNote() {}
+  getTitle() {}
 }

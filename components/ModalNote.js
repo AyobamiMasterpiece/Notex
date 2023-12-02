@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { getCurrentDate, getCurrentTime12Hour, Note } from "./dateFunctions";
+import IconButton from "./iconButton";
 //////////////////////remember to use logic for modal time by passing a prop to know wheter modal was opened by a note click
 function ModalNote({
   visible,
@@ -20,67 +22,82 @@ function ModalNote({
   handleSetnote,
   noteData,
   ChangeNoteData,
+  isdone,
+  changeisdone,
+  noteMode,
+  changeNoteMode,
+  itemId,
+  changeItemId,
 }) {
-  // console.log("mount");
-  const [isdone, setIsDone] = useState(false);
   const [time, setTime] = useState(noteData.time);
-  // const [noteObj,setNoteObj]=useState(noteData);
-  // console.log(noteData.note, "play");
 
   const [noteObj, setNoteObj] = useState({
-    // note: noteData.note,
-    // title: noteData.title,
-    note: "4",
-    title: "7",
+    note: noteData.note,
+    title: noteData.title,
   });
-  console.log(noteData);
-  console.log(noteObj, "k");
-  // console.log(noteData, "ppp");
-  // console.log(noteObj, "kkk");
-  // const [time, setTime] = useState("");
-  useEffect(() => {
-    // setTime(getCurrentTime12Hour());
-    // setTime(noteData.time);
-    ChangeNoteData(new Note());
-
-    setNoteObj({
-      note: noteData.note,
-
-      title: noteData.title,
-    });
-
-    console.log("now-new");
-    return () => {
-      console.log("unmount");
-
-      setIsDone(false);
-    };
-  }, [visible]);
+  console.log(noteObj.title);
+  // console.log(noteData);
+  // console.log(noteObj, "k");
 
   // console.log(notes);
+  // console.log(notes);
+  // console.log(itemId);
+
+  useEffect(() => {
+    // console.log("ok");
+    return () => {
+      // console.log("lol");
+    };
+  }, []);
 
   function handleSaved() {
-    setIsDone(true);
-    let note = new Note(noteObj.note, noteData.time, noteObj.title);
+    changeisdone(true);
+    setTime("Just now");
+    console.log(noteMode);
+    if (noteMode == "edit") {
+      handleSetnote((old) => {
+        let newdata = old.map((item) => {
+          console.log(item.id);
+          if (item.id === itemId) {
+            return new Note(noteObj.note, null, itemId, noteObj.title);
+          }
+          return item;
+        });
+
+        return newdata;
+      });
+
+      return;
+    }
+
+    let note = new Note(noteObj.note, noteData.time, null, noteObj.title);
+    console.log(note);
+    console.log(notes);
+
     handleSetnote((old) => {
       return [note, ...old];
     });
-    handleNoteNodal();
+
+    // handleNoteNodal();
     // console.log(notes);
+    if (noteMode == "new") {
+      changeNoteMode("edit");
+      changeItemId(note.id);
+    }
   }
   function handlenotechange(text) {
     setNoteObj({
       ...noteObj,
       note: text,
     });
-    setIsDone(false);
+    changeisdone(false);
   }
   function handletitlechange(text) {
     setNoteObj({
       ...noteObj,
       title: text,
     });
-    setIsDone(false);
+    changeisdone(false);
   }
 
   return (
@@ -89,23 +106,27 @@ function ModalNote({
       animationType="slide"
       style={styles.modal}
       transparent={true}
+      // key={visible ? "modalVisible" : "modalHidden"}
     >
       <View style={styles.noteContainer}>
         <View style={styles.innerView}>
           <View style={styles.menu}>
-            <TouchableHighlight>
-              <Icon
-                name="arrowleft"
-                type="antdesign"
-                size={25}
-                color={"white"}
-                onPress={handleNoteNodal}
-              ></Icon>
-            </TouchableHighlight>
+            <IconButton
+              onPress={() => {
+                handleNoteNodal();
+                changeNoteMode("new");
+              }}
+              underlayColor={"grey"}
+              iconName={"arrow-back"}
+              iconType={"materialicon"}
+              iconSize={25}
+              iconColor={"white"}
+            />
+
             <Text
               style={{
                 marginLeft: 20,
-                fontSize: 15,
+                fontSize: 18,
                 color: "white",
               }}
             >
@@ -133,34 +154,35 @@ function ModalNote({
               </Pressable>
             </View>
           </View>
-          <View style={styles.timeBox}>
-            <Text style={styles.time}>{noteData.time}</Text>
-          </View>
+          <ScrollView>
+            <View style={styles.timeBox}>
+              <Text style={styles.time}>{time}</Text>
+            </View>
 
-          <View style={styles.titleInput}>
-            <TextInput
-              placeholder={"Title"}
-              style={styles.title}
-              placeholderTextColor={"white"}
-              cursorColor="white"
-              onChangeText={handletitlechange}
-              value={noteObj.title}
-            ></TextInput>
-          </View>
-          <View style={styles.note}>
-            <ScrollView>
+            <View style={styles.titleInput}>
+              <TextInput
+                placeholder={"Title"}
+                style={styles.title}
+                placeholderTextColor={"white"}
+                cursorColor="white"
+                onChangeText={handletitlechange}
+                value={noteObj.title}
+              ></TextInput>
+            </View>
+
+            <View style={styles.note}>
               <TextInput
                 value={noteObj.note}
                 multiline={true}
-                autoFocus={true}
+                // autoFocus={true}
                 style={styles.notePad}
                 cursorColor="white"
                 placeholder="Note something down"
                 placeholderTextColor={"white"}
                 onChangeText={handlenotechange}
               ></TextInput>
-            </ScrollView>
-          </View>
+            </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -183,13 +205,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#424242",
   },
   timeBox: {
-    marginTop: 50,
-    // backgroundColor: "yellow",
+    marginTop: 20,
+    //  backgroundColor: "yellow",
   },
   innerView: {
     width: "95%",
-    marginTop: 10,
-    height: "95%",
+
+    flex: 1,
     // backgroundColor: "red",
   },
   time: {
@@ -207,6 +229,8 @@ const styles = StyleSheet.create({
   note: {
     padding: 10,
     marginTop: 5,
+
+    // backgroundColor: "cyan",
   },
   notePad: {
     fontSize: 15,
@@ -219,13 +243,20 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     height: "5%",
-
+    //  backgroundColor: "blue",
     margin: 0,
     // backgroundColor: "pink",
   },
   checkmark: {
     position: "absolute",
     right: 0,
+  },
+  writecontainer: {
+    backgroundColor: "pink",
+  },
+  scroll: {
+    backgroundColor: "black",
+    height: "70%",
   },
 });
 

@@ -25,7 +25,26 @@ export default function App() {
   const [noteData, setNoteData] = useState(new Note());
 
   const [isModal, setIsmodal] = useState(false);
+  const [noteMode, setNoteMode] = useState("new");
+  const [isdone, setIsDone] = useState(false);
+  const [itemId, setItemId] = useState(null);
 
+  const setRecent = (id) => {
+    setNotes((old) => {
+      let remain = old.filter((item) => item.id !== id);
+      let note = old.find((item) => item.id == id);
+      let newnote = [note, ...remain];
+
+      return newnote;
+    });
+  };
+
+  const changeItemId = (id) => {
+    setItemId(id);
+  };
+  const changeisdone = (p) => {
+    setIsDone(p);
+  };
   const onHandleNote = () => {
     setIsmodal(true);
   };
@@ -39,6 +58,9 @@ export default function App() {
   function ChangeNoteData(item) {
     setNoteData(item);
   }
+  const changeNoteMode = (p) => {
+    setNoteMode(p);
+  };
   // Set dark-colored icon style
 
   return (
@@ -60,6 +82,12 @@ export default function App() {
           handleSetnote={handleSetnote}
           ChangeNoteData={ChangeNoteData}
           key={isModal ? "modalVisible" : "modalHidden"}
+          isdone={isdone}
+          changeisdone={changeisdone}
+          noteMode={noteMode}
+          changeNoteMode={changeNoteMode}
+          itemId={itemId}
+          changeItemId={changeItemId}
         ></ModalNote>
 
         <Title />
@@ -69,11 +97,16 @@ export default function App() {
           notes={notes}
           onHandleNote={onHandleNote}
           onChangeNoteData={ChangeNoteData}
+          changeNoteMode={changeNoteMode}
+          changeItemId={changeItemId}
+          itemId={itemId}
+          setRecent={setRecent}
         />
 
         <View style={styles.plusContainer}>
           <TouchableNativeFeedback
             onPress={() => {
+              setNoteData(new Note());
               openModalInput();
             }}
             background={TouchableNativeFeedback.Ripple("grey", true, 30)}
