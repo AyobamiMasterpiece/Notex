@@ -9,16 +9,19 @@ import {
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { Icon } from "@rneui/themed";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getCurrentDate, getCurrentTime12Hour, Note } from "./dateFunctions";
-import IconButton from "./iconButton";
+import IconButton from "./IconButton";
+import DoneBtn from "./DoneBtn";
 //////////////////////remember to use logic for modal time by passing a prop to know wheter modal was opened by a note click
 function ModalNote({
   visible,
   handleNoteNodal,
   notes,
+
   handleSetnote,
   noteData,
   ChangeNoteData,
@@ -29,6 +32,7 @@ function ModalNote({
   itemId,
   changeItemId,
 }) {
+  const textInputRef = useRef(null);
   const [time, setTime] = useState(noteData.time);
 
   const [noteObj, setNoteObj] = useState({
@@ -44,12 +48,16 @@ function ModalNote({
   // console.log(itemId);
 
   useEffect(() => {
+    if (textInputRef.current) {
+      textInputRef.current.focus();
+    }
+    // Keyboard.dismiss(); // Dismiss any open keyboards
+    // Keyboard.show(); // Show the keyboard
     // console.log("ok");
-    return () => {
-      // console.log("lol");
-    };
   }, []);
-
+  // function getIcon() {
+  //   if(noteMode!=='new'&&isdone==true)
+  // }
   function handleSaved() {
     changeisdone(true);
     setTime("Just now");
@@ -133,28 +141,29 @@ function ModalNote({
               Notes
             </Text>
 
-            <View style={styles.checkmark}>
-              <Pressable
-                android_ripple={{
-                  color: "white",
-                  borderless: true,
-                  radius: 20,
+            <DoneBtn
+              handleSaved={handleSaved}
+              isdone={isdone}
+              noteObj={noteObj}
+            />
+
+            {noteMode != "new" && isdone == true && (
+              <IconButton
+                onPress={() => {}}
+                underlayColor={"grey"}
+                iconName={"dots-three-vertical"}
+                iconType={"entypo"}
+                iconSize={20}
+                iconColor={"white"}
+                style={{
+                  alignSelf: "center",
+                  right: 0,
+                  position: "absolute",
                 }}
-                onPress={handleSaved}
-              >
-                {isdone == false &&
-                  (!noteObj.note.length == 0 || !noteObj.title.length == 0) && (
-                    <Icon
-                      name="done"
-                      type="ionicons"
-                      size={30}
-                      color={"white"}
-                    ></Icon>
-                  )}
-              </Pressable>
-            </View>
+              />
+            )}
           </View>
-          <ScrollView>
+          <ScrollView style={styles.scroll}>
             <View style={styles.timeBox}>
               <Text style={styles.time}>{time}</Text>
             </View>
@@ -174,12 +183,14 @@ function ModalNote({
               <TextInput
                 value={noteObj.note}
                 multiline={true}
-                // autoFocus={true}
+                autoFocus={true}
                 style={styles.notePad}
                 cursorColor="white"
                 placeholder="Note something down"
                 placeholderTextColor={"white"}
                 onChangeText={handlenotechange}
+
+                // ref={textInputRef}
               ></TextInput>
             </View>
           </ScrollView>
@@ -203,6 +214,9 @@ const styles = StyleSheet.create({
     // bottom: 0,
 
     backgroundColor: "#424242",
+  },
+  modal: {
+    flex: 1,
   },
   timeBox: {
     marginTop: 20,
@@ -247,16 +261,13 @@ const styles = StyleSheet.create({
     margin: 0,
     // backgroundColor: "pink",
   },
-  checkmark: {
-    position: "absolute",
-    right: 0,
-  },
+
   writecontainer: {
     backgroundColor: "pink",
   },
   scroll: {
-    backgroundColor: "black",
-    height: "70%",
+    //  backgroundColor: "yellow",
+    maxHeight: "80%",
   },
 });
 

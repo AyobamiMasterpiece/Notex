@@ -10,14 +10,15 @@ const IconButton = ({
   iconType,
   iconSize,
   iconColor,
+  style,
 }) => {
   return (
     <TouchableHighlight
       underlayColor={underlayColor}
       onPress={onPress}
-      style={styles.touchableContainer}
+      style={[styles.touchableContainer, style]}
     >
-      <View style={styles.iconContainer}>
+      <View style={[styles.iconContainer]}>
         <Icon
           name={iconName}
           type={iconType}
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 40,
     width: 40,
+    // backgroundColor: "red",
   },
   iconContainer: {
     padding: 5,
@@ -42,6 +44,7 @@ const styles = StyleSheet.create({
     width: 40,
     alignItems: "center",
     justifyContent: "center",
+    // rrr
   },
 });
 
