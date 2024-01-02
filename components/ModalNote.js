@@ -10,12 +10,15 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Keyboard,
+  Animated,
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import { useEffect, useState, useRef } from "react";
 import { getCurrentDate, getCurrentTime12Hour, Note } from "./dateFunctions";
 import IconButton from "./IconButton";
 import DoneBtn from "./DoneBtn";
+import DeleteModal from "./DeleteModal";
+import DeleteScreen from "./DeleteScreen";
 //////////////////////remember to use logic for modal time by passing a prop to know wheter modal was opened by a note click
 function ModalNote({
   visible,
@@ -32,7 +35,37 @@ function ModalNote({
   itemId,
   changeItemId,
 }) {
-  const textInputRef = useRef(null);
+  // const textInputRef = useRef(null);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [showDeleteScreen, setShowDeleteScreen] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  console.log(fadeAnim, "k");
+  const toggleVisibility = () => {
+    const toValue = isVisible ? 0 : 1; // Toggle between 0 and 1
+
+    Animated.timing(fadeAnim, {
+      toValue,
+      duration: 1000, // Adjust the duration as needed
+      useNativeDriver: true, // Set to false when using layout properties like opacity
+    }).start(() => {
+      // Animation completion callback
+      setIsVisible(!isVisible);
+    });
+  };
+  // useEffect(() => {
+  //   // Cleanup code here, e.g., resetting state or animations
+  //   return () => {
+  //     fadeAnim.setValue(0); // Reset the animation value
+  //   };
+  // }, [isVisible]);
+  // useEffect(() => {
+  //   return () => {
+  //     // Cleanup code here, e.g., resetting state or animations
+  //     fadeAnim.setValue(); // Reset the animation value
+  //   };
+  // }, [isVisible]);
+  ///animate
   const [time, setTime] = useState(noteData.time);
 
   const [noteObj, setNoteObj] = useState({
@@ -40,17 +73,11 @@ function ModalNote({
     title: noteData.title,
   });
   console.log(noteObj.title);
-  // console.log(noteData);
-  // console.log(noteObj, "k");
-
-  // console.log(notes);
-  // console.log(notes);
-  // console.log(itemId);
 
   useEffect(() => {
-    if (textInputRef.current) {
-      textInputRef.current.focus();
-    }
+    // if (textInputRef.current) {
+    //   textInputRef.current.focus();
+    // }
     // Keyboard.dismiss(); // Dismiss any open keyboards
     // Keyboard.show(); // Show the keyboard
     // console.log("ok");
@@ -58,6 +85,7 @@ function ModalNote({
   // function getIcon() {
   //   if(noteMode!=='new'&&isdone==true)
   // }
+  function handleDelete() {}
   function handleSaved() {
     changeisdone(true);
     setTime("Just now");
@@ -116,6 +144,9 @@ function ModalNote({
       transparent={true}
       // key={visible ? "modalVisible" : "modalHidden"}
     >
+      {showDeleteScreen && (
+        <DeleteScreen onpress={() => setShowDeleteScreen(false)} />
+      )}
       <View style={styles.noteContainer}>
         <View style={styles.innerView}>
           <View style={styles.menu}>
@@ -149,7 +180,9 @@ function ModalNote({
 
             {noteMode != "new" && isdone == true && (
               <IconButton
-                onPress={() => {}}
+                onPress={() => {
+                  toggleVisibility();
+                }}
                 underlayColor={"grey"}
                 iconName={"dots-three-vertical"}
                 iconType={"entypo"}
@@ -162,7 +195,18 @@ function ModalNote({
                 }}
               />
             )}
+            {
+              <DeleteModal
+                onpress={() => {
+                  toggleVisibility();
+                  setShowDeleteScreen(!showDeleteScreen);
+                  Keyboard.dismiss();
+                }}
+                fadeAnim={fadeAnim}
+              />
+            }
           </View>
+
           <ScrollView style={styles.scroll}>
             <View style={styles.timeBox}>
               <Text style={styles.time}>{time}</Text>
@@ -204,7 +248,7 @@ const styles = StyleSheet.create({
   noteContainer: {
     flex: 1,
     alignItems: "center",
-
+    position: "relative",
     // height: "20%",
     // width: "99%",
     // borderTopRightRadius: 35,
@@ -217,6 +261,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     flex: 1,
+    position: "relative",
   },
   timeBox: {
     marginTop: 20,
@@ -224,7 +269,7 @@ const styles = StyleSheet.create({
   },
   innerView: {
     width: "95%",
-
+    position: "relative",
     flex: 1,
     // backgroundColor: "red",
   },
