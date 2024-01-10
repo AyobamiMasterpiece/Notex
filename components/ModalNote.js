@@ -24,7 +24,7 @@ function ModalNote({
   visible,
   handleNoteNodal,
   notes,
-
+  handledeleteitem,
   handleSetnote,
   noteData,
   ChangeNoteData,
@@ -85,7 +85,7 @@ function ModalNote({
   // function getIcon() {
   //   if(noteMode!=='new'&&isdone==true)
   // }
-  function handleDelete() {}
+
   function handleSaved() {
     changeisdone(true);
     setTime("Just now");
@@ -145,7 +145,16 @@ function ModalNote({
       // key={visible ? "modalVisible" : "modalHidden"}
     >
       {showDeleteScreen && (
-        <DeleteScreen onpress={() => setShowDeleteScreen(false)} />
+        <DeleteScreen
+          onpress={() => setShowDeleteScreen(false)}
+          ondelete={() => {
+            handledeleteitem(itemId);
+            handleNoteNodal();
+            changeNoteMode("new");
+          }}
+          handledeleteitem={handledeleteitem}
+          itemId={itemId}
+        />
       )}
       <View style={styles.noteContainer}>
         <View style={styles.innerView}>

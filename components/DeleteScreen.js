@@ -2,7 +2,7 @@ import { StyleSheet, View, Text } from "react-native";
 import HorizontalRule from "./HorizontalRule";
 import PrimaryBtn from "./PrimaryBtn";
 
-export default function DeleteScreen({ onpress }) {
+export default function DeleteScreen({ onpress, ondelete }) {
   console.log("lol");
   return (
     <View style={styles.rootScreen}>
@@ -26,7 +26,7 @@ export default function DeleteScreen({ onpress }) {
           <PrimaryBtn style={styles.btn} onpress={onpress}>
             Cancel
           </PrimaryBtn>
-          <PrimaryBtn style={styles.btn} textColor={"red"}>
+          <PrimaryBtn style={styles.btn} textColor={"red"} onpress={ondelete}>
             Delete
           </PrimaryBtn>
         </View>
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "90%",
     borderRadius: 10,
+    marginBottom: 30,
   },
   btn: {
     flex: 1,

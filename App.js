@@ -38,6 +38,11 @@ export default function App() {
       return newnote;
     });
   };
+  const handledeleteitem = (id) => {
+    setNotes((prev) => {
+      return prev.filter((item) => item.id !== id);
+    });
+  };
 
   const changeItemId = (id) => {
     setItemId(id);
@@ -88,6 +93,7 @@ export default function App() {
           changeNoteMode={changeNoteMode}
           itemId={itemId}
           changeItemId={changeItemId}
+          handledeleteitem={handledeleteitem}
         ></ModalNote>
 
         <Title />
