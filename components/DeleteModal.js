@@ -20,7 +20,7 @@ export default function DeleteModal({ onpress, fadeAnim }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
+    backgroundColor: "grey",
     width: "50%",
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   text: {
     padding: 10,
-    color: "grey",
+    color: "white",
     // backgroundColor: "red",
   },
 });

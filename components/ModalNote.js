@@ -11,14 +11,21 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Animated,
+  ToastAndroid,
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import { useEffect, useState, useRef } from "react";
-import { getCurrentDate, getCurrentTime12Hour, Note } from "./dateFunctions";
+import {
+  getCurrentDate,
+  getCurrentTime12Hour,
+  getTimeOfCreation,
+  Note,
+} from "./dateFunctions";
 import IconButton from "./IconButton";
 import DoneBtn from "./DoneBtn";
 import DeleteModal from "./DeleteModal";
 import DeleteScreen from "./DeleteScreen";
+
 //////////////////////remember to use logic for modal time by passing a prop to know wheter modal was opened by a note click
 function ModalNote({
   visible,
@@ -40,7 +47,7 @@ function ModalNote({
   const [isVisible, setIsVisible] = useState(false);
   const [showDeleteScreen, setShowDeleteScreen] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  console.log(fadeAnim, "k");
+  // console.log(fadeAnim, "k");
   const toggleVisibility = () => {
     const toValue = isVisible ? 0 : 1; // Toggle between 0 and 1
 
@@ -53,49 +60,52 @@ function ModalNote({
       setIsVisible(!isVisible);
     });
   };
-  // useEffect(() => {
-  //   // Cleanup code here, e.g., resetting state or animations
-  //   return () => {
-  //     fadeAnim.setValue(0); // Reset the animation value
-  //   };
-  // }, [isVisible]);
-  // useEffect(() => {
-  //   return () => {
-  //     // Cleanup code here, e.g., resetting state or animations
-  //     fadeAnim.setValue(); // Reset the animation value
-  //   };
-  // }, [isVisible]);
-  ///animate
+
   const [time, setTime] = useState(noteData.time);
 
   const [noteObj, setNoteObj] = useState({
     note: noteData.note,
     title: noteData.title,
   });
-  console.log(noteObj.title);
-
-  useEffect(() => {
-    // if (textInputRef.current) {
-    //   textInputRef.current.focus();
-    // }
-    // Keyboard.dismiss(); // Dismiss any open keyboards
-    // Keyboard.show(); // Show the keyboard
-    // console.log("ok");
-  }, []);
-  // function getIcon() {
-  //   if(noteMode!=='new'&&isdone==true)
-  // }
+  const formerNote = useRef({
+    note: noteData.note,
+    title: noteData.title,
+  });
 
   function handleSaved() {
+    if (noteObj.note.trim() == "" && noteObj.title.trim() == "") {
+      /////////todo : alert user to write smth
+
+      ToastAndroid.showWithGravityAndOffset(
+        "Please write a note before saving",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        0,
+        250
+      );
+      return;
+      ///// dont save if no notes or title
+    }
     changeisdone(true);
-    setTime("Just now");
-    console.log(noteMode);
+    if (
+      noteObj.note == formerNote.current.note &&
+      noteObj.title == formerNote.current.title
+    ) {
+      return; //// if note is the same with old version
+    }
+    setTime(new Date().toJSON());
+
     if (noteMode == "edit") {
       handleSetnote((old) => {
         let newdata = old.map((item) => {
           console.log(item.id);
           if (item.id === itemId) {
-            return new Note(noteObj.note, null, itemId, noteObj.title);
+            return new Note(
+              noteObj.note.trim(),
+              null,
+              itemId,
+              noteObj.title.trim()
+            );
           }
           return item;
         });
@@ -106,9 +116,7 @@ function ModalNote({
       return;
     }
 
-    let note = new Note(noteObj.note, noteData.time, null, noteObj.title);
-    console.log(note);
-    console.log(notes);
+    let note = new Note(noteObj.note, null, null, noteObj.title);
 
     handleSetnote((old) => {
       return [note, ...old];
@@ -142,7 +150,6 @@ function ModalNote({
       animationType="slide"
       style={styles.modal}
       transparent={true}
-      // key={visible ? "modalVisible" : "modalHidden"}
     >
       {showDeleteScreen && (
         <DeleteScreen
@@ -163,6 +170,7 @@ function ModalNote({
               onPress={() => {
                 handleNoteNodal();
                 changeNoteMode("new");
+                handleSaved();
               }}
               underlayColor={"grey"}
               iconName={"arrow-back"}
@@ -185,6 +193,7 @@ function ModalNote({
               handleSaved={handleSaved}
               isdone={isdone}
               noteObj={noteObj}
+              notemode={noteMode}
             />
 
             {noteMode != "new" && isdone == true && (
@@ -218,7 +227,13 @@ function ModalNote({
 
           <ScrollView style={styles.scroll}>
             <View style={styles.timeBox}>
-              <Text style={styles.time}>{time}</Text>
+              {
+                <Text style={styles.time}>
+                  {noteMode == "new"
+                    ? getCurrentTime12Hour(new Date(time))
+                    : getTimeOfCreation(new Date(time))}
+                </Text>
+              }
             </View>
 
             <View style={styles.titleInput}>
@@ -266,7 +281,7 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // bottom: 0,
 
-    backgroundColor: "#424242",
+    backgroundColor: "black",
   },
   modal: {
     flex: 1,

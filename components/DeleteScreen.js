@@ -14,7 +14,13 @@ export default function DeleteScreen({ onpress, ondelete }) {
         >
           Delete Note
         </Text>
-        <Text>Are you sure you want to delete this Note?</Text>
+        <Text
+          style={{
+            marginVertical: 10,
+          }}
+        >
+          Are you sure you want to delete this note?
+        </Text>
         <HorizontalRule></HorizontalRule>
         <View
           style={{
@@ -43,18 +49,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     position: "absolute",
-    opacity: 0.8,
-    backgroundColor: "black",
+
+    backgroundColor: "transparent",
     zIndex: 10,
   },
 
   card: {
-    bottom: 10,
+    bottom: 0,
     backgroundColor: "grey",
     padding: 10,
     width: "90%",
+    // backgroundColor: "pink",
     borderRadius: 10,
-    marginBottom: 30,
   },
   btn: {
     flex: 1,
