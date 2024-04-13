@@ -1,14 +1,8 @@
-Here's an improved README.md for your Notex note-taking app, with features divided into paragraphs and enhanced with emojis:
 
----
 
 # Notex 📝✨
 
----
 
-Welcome to Notex, your ultimate companion for note-taking and organization! With Notex, you can effortlessly create, view, and delete notes, making it the perfect tool for capturing your thoughts and ideas on the go. 
-
----
 
 ## Features 🚀📌
 
@@ -17,6 +11,8 @@ Welcome to Notex, your ultimate companion for note-taking and organization! With
 📝 **Create Notes**: Easily jot down your thoughts, ideas, and reminders with Notex's intuitive note creation feature. Whether it's a quick memo or a detailed journal entry, Notex has you covered.
 
 👀 **View Notes**: Access your notes anytime, anywhere, and stay organized with Notex's streamlined note viewing capabilities. Never lose track of important information again!
+
+✏️ **Edit Notes**: Need to make changes to your existing notes? Notex allows you to effortlessly edit and revise your notes, ensuring your information is always up-to-date and accurate.
 
 🗑️ **Delete Notes**: Need to declutter your notes? Notex allows you to effortlessly delete unwanted notes, keeping your workspace tidy and clutter-free.
 
