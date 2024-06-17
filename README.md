@@ -37,6 +37,19 @@ To get started with Notex, follow these simple steps:
 3. **Run the App**: `npm start`
 4. **Start Noting**: Access Notex on your preferred device and start capturing your thoughts, ideas, and memories with ease!
 
+
+## Take a look
+
+![WhatsApp Image 2024-06-16 at 5 21 29 PM (2)](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/8ec6909b-7768-4712-ba26-51b28a6256fa)
+
+![WhatsApp Image 2024-06-16 at 5 21 29 PM (1)](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/a3eac617-a95e-4f63-8cbb-0bb2fbdaf2af)
+
+   ![WhatsApp Image 2024-06-16 at 5 21 29 PM](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/1ef6e832-481c-42f1-b316-b1a625a6f5d8)
+
+![WhatsApp Image 2024-06-16 at 5 21 28 PM](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/7d1a845e-d35f-41ae-bee9-7afa4a2b40e1)
+![WhatsApp Image 2024-06-16 at 5 21 10 PM (1)](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/e978041f-8c78-4c3d-ba31-9f3970438c10)
+![WhatsApp Image 2024-06-16 at 5 21 10 PM](https://github.com/AyobamiMasterpiece/Notex/assets/96892970/96a2e85f-ba54-468f-be8f-72e42ddb9e11)
+
 ---
 
 
