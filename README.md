@@ -2,7 +2,7 @@
 
 # Notex 📝✨
 
-
+Download link : https://drive.google.com/file/d/16U5NriZFQNlhVcX1QHeL2f5QyoRCUDg2/view?usp=drivesdk
 
 ## Features 🚀📌
 
